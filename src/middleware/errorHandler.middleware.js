@@ -1,7 +1,7 @@
 exports.ErrorHandler = (error, req, resp, next) => {
   try {
-    resp.status(400).json({ message: error.message });
+    resp.status(error.status).json(error);
   } catch {
-    resp.json({ message: "Internal Server Error" });
+    resp.status(500).json({ message: "Internal Server Error", status: 500 });
   }
 };

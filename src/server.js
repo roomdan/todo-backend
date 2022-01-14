@@ -11,5 +11,3 @@ const serverLog = () => {
 };
 
 app.listen(PORT, serverLog);
-
-console.log("hola mundo");
