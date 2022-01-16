@@ -15,3 +15,23 @@ exports.CreateUserCtrl = async (req, resp, next) => {
     );
   }
 };
+
+exports.UpdataUserCtrl = async (req, resp, next) => {
+  try {
+    const updateData = req.body;
+    const { id } = req.params;
+
+    const update = await UserService.Update(updateData, id);
+
+    resp.status(201).json(update);
+  } catch (error) {
+    next(
+      new ErrorHandler(
+        error.message.toUpperCase() === "validation error".toUpperCase()
+          ? "Verify data, username, cell phone number or email are already registered with an active user"
+          : "Data error, fail server request",
+        400
+      )
+    );
+  }
+};

@@ -28,7 +28,19 @@ class ManageUsers {
     return db_create;
   }
 
-  static async Update(upData, id) {}
+  static async Update(upData, id) {
+    id = Number(id);
+    const updataData = {
+      userName: upData.userName,
+      name: upData.name,
+      latName: upData.lastName,
+      phone: upData.phone,
+      email: upData.email,
+    };
+
+    const db_user = await UserData.update(updataData, { where: { id } });
+    return db_user;
+  }
 }
 
 module.exports = ManageUsers;
