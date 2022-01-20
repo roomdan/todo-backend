@@ -9,29 +9,43 @@ const { UserData } = Models();
 dotenv.config();
 
 exports.VerifyHeaderToken = async (req, resp, next) => {
-  const { authorization } = req.headers;
-  if (!authorization && authorization.startsWith("Bearer")) {
-    return next(
-      new ErrorApp(
-        "Error, invalid api acces, please verify de acces token.",
-        400
-      )
-    );
-  } else {
-    const AuthToken = authorization.split(" ")[1];
+  try {
+    const { authorization } = req.headers;
 
-    const decoded = jwt.verify(AuthToken, process.env.JWT_SECRET);
-    if (!decoded) {
-      next(new ErrorApp("Acces token is not active"));
+    let token;
+
+    if (!authorization && authorization.startsWith("Bearer")) {
+      return next(
+        new ErrorApp(
+          "Error, invalid api acces, please verify de acces token.",
+          400
+        )
+      );
+    } else {
+      const AuthToken = authorization.split(" ")[1];
+
+      token = AuthToken;
     }
 
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     const userInfo = await UserData.findByPk(decoded.id, {
+      where: {
+        active: true,
+      },
       attributes: {
         exclude: ["password", "userName", "deleted", "active"],
       },
     });
 
+    if (!userInfo) {
+      return next(new ErrorApp("Invalid Token", 400));
+    }
+
     req.userInSesion = userInfo;
+
     next();
+  } catch (error) {
+    next(new ErrorApp(error.message, 400));
   }
 };

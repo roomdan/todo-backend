@@ -1,5 +1,6 @@
 const UserService = require("../service/user.service.js");
 const ErrorHandler = require("../util/error_handler/error.handler.js");
+const jwt = require("jsonwebtoken");
 
 //express validator
 const { validationResult } = require("express-validator");
@@ -80,7 +81,7 @@ exports.AutUserCtrl = async (req, resp, next) => {
     //send cookie with the token acces
     resp.cookie("login", ValidateCredentials.token, cookieConfig);
 
-    // ValidateCredentials.token = undefined;
+    ValidateCredentials.token = undefined;
     resp.status(400).json(ValidateCredentials);
   } catch (error) {
     next(new ErrorHandler(error.message, 400));
