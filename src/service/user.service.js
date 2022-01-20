@@ -79,8 +79,17 @@ class ManageUsers {
     const validateData = await UserData.findOne({
       where: {
         userName: credentials.userName,
+        active: true,
       },
     });
+
+    if (!validateData) {
+      return {
+        error: "Incorrect Credentials",
+        acces: false,
+        message: "acces denied",
+      };
+    }
 
     const ValidatePassword = await Bcript.compare(
       credentials.password,
@@ -143,6 +152,20 @@ class ManageUsers {
 
       return getUsers;
     }
+  }
+
+  static async SetUserGroup(id, group) {
+    const user = await UserData.update(
+      { Group_id: Number(group) },
+      { where: { id: Number(id), active: true } }
+    );
+    if (!user) {
+      return {
+        error: "User is inactive, deleted or not exist",
+        status: 400,
+      };
+    }
+    return user;
   }
 }
 

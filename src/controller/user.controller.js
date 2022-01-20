@@ -23,7 +23,6 @@ exports.CreateUserCtrl = async (req, resp, next) => {
 exports.UpdataUserCtrl = async (req, resp, next) => {
   try {
     const updateData = req.body;
-    const { id } = req.params;
 
     const errors = validationResult(req);
 
@@ -31,7 +30,10 @@ exports.UpdataUserCtrl = async (req, resp, next) => {
       return resp.status(400).json({ errors: errors.array() });
     }
 
-    const updatedService = await UserService.Update(updateData, id);
+    const updatedService = await UserService.Update(
+      updateData,
+      req.userInSesion.id
+    );
     if (updatedService.error) {
       return resp.status(400).json(updatedService);
     }
@@ -44,7 +46,7 @@ exports.UpdataUserCtrl = async (req, resp, next) => {
     next(
       new ErrorHandler(
         error.message.toUpperCase() === "validation error".toUpperCase()
-          ? "Verify data, username, cell phone number or email are already registered with an active user"
+          ? "Verify data, username, cell phone number or email are already registered with an active user, select other value"
           : "Data error, fail server request",
         400
       )
@@ -54,8 +56,7 @@ exports.UpdataUserCtrl = async (req, resp, next) => {
 
 exports.DeleteUserCtrl = async (req, resp, next) => {
   try {
-    const { id } = req.params;
-    const Delete = await UserService.DeleteUser(id);
+    const Delete = await UserService.DeleteUser(req.userInSesion.id);
 
     resp.status(201).json(Delete);
   } catch (error) {
@@ -81,7 +82,7 @@ exports.AutUserCtrl = async (req, resp, next) => {
     //send cookie with the token acces
     resp.cookie("login", ValidateCredentials.token, cookieConfig);
 
-    ValidateCredentials.token = undefined;
+    // ValidateCredentials.token = undefined;
     resp.status(400).json(ValidateCredentials);
   } catch (error) {
     next(new ErrorHandler(error.message, 400));
@@ -90,14 +91,18 @@ exports.AutUserCtrl = async (req, resp, next) => {
 
 exports.GetUserCtrl = async (req, resp, next) => {
   try {
-    const { user } = req.query;
-    if (user) {
-      const GetOnlyUser = await UserService.GetUserInfo(user);
-      resp.status(200).json(GetOnlyUser);
-    }
+    const GetOnlyUser = await UserService.GetUserInfo(req.userInSesion.id);
+    resp.status(200).json(GetOnlyUser);
+  } catch (error) {
+    next(new ErrorHandler(error.message, 400));
+  }
+};
 
-    const GetAllUsers = await UserService.GetUserInfo();
-    resp.status(200).json(GetAllUsers);
+exports.SetUserGroupCtrl = async (req, resp, next) => {
+  try {
+    const { Group_id } = req.body;
+    const userData = UserService.SetUserGroup(req.userInSesion.id, Group_id);
+    resp.status(200).json(userData);
   } catch (error) {
     next(new ErrorHandler(error.message, 400));
   }

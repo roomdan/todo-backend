@@ -1,10 +1,9 @@
 const { body } = require("express-validator");
 
 exports.VerifyContentMiddleware = [
-  body("password")
+  body("name")
     .isString()
-    .withMessage("Error, fail password is not string")
+    .withMessage("Error, name is not a string")
     .notEmpty()
-    .withMessage("Error, Password could not be empty"),
-  body("name"),
+    .withMessage("Error, name could not be empty"),
 ];
