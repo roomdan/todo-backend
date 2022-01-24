@@ -6,7 +6,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const { UserData } = Models();
+const { UserData, Group } = Models();
 
 class ManageUsers {
   static async Create(user) {
@@ -155,17 +155,39 @@ class ManageUsers {
   }
 
   static async SetUserGroup(id, group) {
-    const user = await UserData.update(
-      { Group_id: Number(group) },
-      { where: { id: Number(id), active: true } }
-    );
-    if (!user) {
-      return {
-        error: "User is inactive, deleted or not exist",
-        status: 400,
-      };
+    const addGroup = await Group.findOne({ where: { id: group } });
+    if (addGroup) {
+      const updateUserGroup = await UserData.update(
+        {
+          Group_id: group,
+        },
+        {
+          where: {
+            id: parseInt(id, 10),
+            active: true,
+          },
+        }
+      );
+      if (updateUserGroup[0] === 1) {
+        return {
+          groupData: addGroup,
+          message: "Update Group Succes",
+          status: 201,
+        };
+      } else {
+        return {
+          error: "Error, User is not exist or inactive",
+          message: "Please verify user Data and try again.",
+          status: 400,
+        };
+      }
     }
-    return user;
+
+    return {
+      error: "Error, Group not exist",
+      message: "This group not exist, please create before this group.",
+      status: 400,
+    };
   }
 }
 

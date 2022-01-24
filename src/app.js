@@ -13,6 +13,9 @@ dotenv.config({ path: dev_ENV });
 
 //project sources
 const UsersRouter = require("./route/users.route.js");
+const GroupsRouter = require("./route/group.route.js");
+
+//erros middleware
 const { ErrorHandler } = require("./middleware/errorHandler.middleware.js");
 
 const app = express();
@@ -23,9 +26,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use(ErrorHandler);
 // project routes
 app.use("/v1/users", UsersRouter);
-// Errors Routes Middleware
-app.use(ErrorHandler);
-
+app.use("/v1/groups", GroupsRouter);
 module.exports = app;

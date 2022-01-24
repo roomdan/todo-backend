@@ -101,7 +101,10 @@ exports.GetUserCtrl = async (req, resp, next) => {
 exports.SetUserGroupCtrl = async (req, resp, next) => {
   try {
     const { Group_id } = req.body;
-    const userData = UserService.SetUserGroup(req.userInSesion.id, Group_id);
+    const userData = await UserService.SetUserGroup(
+      req.userInSesion.id,
+      Group_id
+    );
     resp.status(200).json(userData);
   } catch (error) {
     next(new ErrorHandler(error.message, 400));
