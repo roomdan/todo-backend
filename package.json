@@ -18,15 +18,20 @@
     "dotenv": "^11.0.0",
     "eslint": "^8.6.0",
     "express": "^4.17.2",
+    "express-rate-limit": "^6.2.0",
     "express-validator": "^6.14.0",
+    "html-to-text": "^8.1.0",
     "install": "^0.13.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.7.2",
     "nodemon": "^2.0.15",
     "npm": "^8.3.1",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
+    "pug": "^3.0.2",
     "sequelize": "^6.13.0",
-    "sequelize-auto": "^0.8.8"
+    "sequelize-auto": "^0.8.8",
+    "xss-clean": "^0.1.1"
   }
 }

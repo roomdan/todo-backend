@@ -1,6 +1,12 @@
 //work-dev
 const express = require("express");
 
+//librery protect xss xros script
+const xss = require("xss-clean");
+
+//protected api, proteje api contra ataques de peticiones excesivas desde una ip
+const ratelimit = require("express-rate-limit");
+
 //dependencies
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -14,11 +20,28 @@ dotenv.config({ path: dev_ENV });
 //project sources
 const UsersRouter = require("./route/users.route.js");
 const GroupsRouter = require("./route/group.route.js");
+const TasksRouter = require("./route/tasks.route.js");
 
 //erros middleware
 const { ErrorHandler } = require("./middleware/errorHandler.middleware.js");
 
 const app = express();
+
+//xss Cross-site scripting inplement
+
+app.use(xss());
+
+//expres rate limit-
+app.use(
+  ratelimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 10 * 1000, // Limit each IP to 5 create account requests per `window` (here, per hour)
+    message:
+      "Too many accounts created from this IP, please try again after an hour",
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  })
+);
 
 // project middlewares
 app.use(morgan("dev"));
@@ -30,4 +53,5 @@ app.use(ErrorHandler);
 // project routes
 app.use("/v1/users", UsersRouter);
 app.use("/v1/groups", GroupsRouter);
+app.use("/v1/tasks", TasksRouter);
 module.exports = app;
