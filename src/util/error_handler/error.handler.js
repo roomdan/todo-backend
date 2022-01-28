@@ -1,5 +1,9 @@
 const dotenv = require("dotenv");
-dotenv.config();
+const path = require("path");
+
+const env = path.resolve(__dirname, "../", "../", "../", "config.env");
+
+dotenv.config({ path: env });
 
 class ErrorApp extends Error {
   "use strict";

@@ -21,6 +21,7 @@ dotenv.config({ path: dev_ENV });
 const UsersRouter = require("./route/users.route.js");
 const GroupsRouter = require("./route/group.route.js");
 const TasksRouter = require("./route/tasks.route.js");
+const GeneralRouter = require("./route/genera.route.js");
 
 //erros middleware
 const { ErrorHandler } = require("./middleware/errorHandler.middleware.js");
@@ -31,7 +32,6 @@ const cookieParser = require("cookie-parser");
 const app = express();
 
 //xss Cross-site scripting inplement
-
 app.use(xss());
 
 //expres rate limit-
@@ -55,9 +55,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use(ErrorHandler);
 // project routes
 app.use("/api/v1/users", UsersRouter);
 app.use("/api/v1/groups", GroupsRouter);
 app.use("/api/v1/tasks", TasksRouter);
+app.use("*", GeneralRouter);
+
+//Global Error Manager
+app.use(ErrorHandler);
+
 module.exports = app;

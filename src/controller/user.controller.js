@@ -1,5 +1,5 @@
 const UserService = require("../service/user.service.js");
-const ErrorHandler = require("../util/error_handler/error.handler.js");
+const ErrorApp = require("../util/error_handler/error.handler.js");
 
 //express validator
 const { validationResult } = require("express-validator");
@@ -12,7 +12,7 @@ exports.CreateUserCtrl = async (req, resp, next) => {
     resp.status(201).json(Create_db);
   } catch (error) {
     next(
-      new ErrorHandler(
+      new ErrorApp(
         "User Data Error, please verify data types or view our documentation",
         400
       ).Error()
@@ -44,7 +44,7 @@ exports.UpdataUserCtrl = async (req, resp, next) => {
     });
   } catch (error) {
     next(
-      new ErrorHandler(
+      new ErrorApp(
         error.message.toUpperCase() === "validation error".toUpperCase()
           ? "Verify data, username, cell phone number or email are already registered with an active user, select other value"
           : "Data error, fail server request",
@@ -60,7 +60,7 @@ exports.DeleteUserCtrl = async (req, resp, next) => {
 
     resp.status(201).json(Delete);
   } catch (error) {
-    next(new ErrorHandler(error.message, 400));
+    next(new ErrorApp(error.message, 400));
   }
 };
 
@@ -88,7 +88,7 @@ exports.AutUserCtrl = async (req, resp, next) => {
     //send alert login email
     await new Email("daniel", "danielexamexample@gmail.com").sendWelcome();
   } catch (error) {
-    next(new ErrorHandler(error.message, 400));
+    next(new ErrorApp(error.message, 400));
   }
 };
 
@@ -97,7 +97,7 @@ exports.GetUserCtrl = async (req, resp, next) => {
     const GetOnlyUser = await UserService.GetUserInfo(req.userInSesion.id);
     resp.status(200).json(GetOnlyUser);
   } catch (error) {
-    next(new ErrorHandler(error.message, 400));
+    next(new ErrorApp(error.message, 400));
   }
 };
 
@@ -110,6 +110,6 @@ exports.SetUserGroupCtrl = async (req, resp, next) => {
     );
     resp.status(200).json(userData);
   } catch (error) {
-    next(new ErrorHandler(error.message, 400));
+    next(new ErrorApp(error.message, 400));
   }
 };
