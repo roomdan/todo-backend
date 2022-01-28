@@ -3,7 +3,7 @@ const config = {
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB,
-    host: "127.0.0.1",
+    host: process.env.HOST,
     dialect: "postgres",
   },
   test: {
@@ -14,11 +14,11 @@ const config = {
     dialect: "mysql",
   },
   production: {
-    username: "root",
-    password: null,
-    database: "database_production",
-    host: "127.0.0.1",
-    dialect: "mysql",
+    username: process.env.DB_P_USER,
+    password: process.env.DB_P_PASS,
+    database: process.env.DB_P_DB,
+    host: process.env.DB_P_HOST,
+    dialect: "postgres",
   },
 };
 

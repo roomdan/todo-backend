@@ -57,7 +57,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(ErrorHandler);
 // project routes
-app.use("/v1/users", UsersRouter);
-app.use("/v1/groups", GroupsRouter);
-app.use("/v1/tasks", TasksRouter);
+app.use("/api/v1/users", UsersRouter);
+app.use("/api/v1/groups", GroupsRouter);
+app.use("/api/v1/tasks", TasksRouter);
 module.exports = app;

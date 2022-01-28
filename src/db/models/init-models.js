@@ -13,7 +13,7 @@ function initModels() {
 
   // define db method
   const env = process.env.NODE_ENV || "development";
-  const configObj = config.development;
+  const configObj = config[env];
 
   if (config.use_env_variable) {
     sequelize = new _sequelize(config.use_env_variable, config);
