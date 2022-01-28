@@ -4,8 +4,6 @@ const path = require("path");
 
 const configpath = path.join(__dirname, "..", "..", "..", "config.env");
 
-console.table({ route: configpath });
-
 dotenv.config({ path: configpath });
 
 class Email {
