@@ -1,7 +1,12 @@
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
+const path = require("path");
 
-dotenv.config();
+const configpath = path.join(__dirname, "..", "..", "..", "config.env");
+
+console.table({ route: configpath });
+
+dotenv.config({ path: configpath });
 
 class Email {
   constructor(name, emails) {
@@ -14,8 +19,8 @@ class Email {
       host: "smtp.mailtrap.io",
       port: "2525",
       auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
+        user: String("83e1578ddbde7f"),
+        pass: String("3ba42c00944bea"),
       },
     });
   }
@@ -23,12 +28,17 @@ class Email {
   async send(subject) {
     const transport = await this.createTransport();
 
-    transport.sendMail({
+    await transport.sendMail({
       from: "danielfcramos7@gmail.com",
+      to: "danielexampexe@gmail.com",
       subject,
-      html: "",
+      html: "hola mundo",
     });
   }
 
-  sendWelcome() {}
+  async sendWelcome() {
+    await this.send("new email");
+  }
 }
+
+module.exports = { Email };

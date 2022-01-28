@@ -1,9 +1,9 @@
 const UserService = require("../service/user.service.js");
 const ErrorHandler = require("../util/error_handler/error.handler.js");
-const jwt = require("jsonwebtoken");
 
 //express validator
 const { validationResult } = require("express-validator");
+const { Email } = require("../util/nodemailer/email.js");
 
 exports.CreateUserCtrl = async (req, resp, next) => {
   try {
@@ -84,6 +84,9 @@ exports.AutUserCtrl = async (req, resp, next) => {
 
     // ValidateCredentials.token = undefined;
     resp.status(400).json(ValidateCredentials);
+
+    //send alert login email
+    await new Email("daniel", "danielexamexample@gmail.com").sendWelcome();
   } catch (error) {
     next(new ErrorHandler(error.message, 400));
   }

@@ -25,6 +25,9 @@ const TasksRouter = require("./route/tasks.route.js");
 //erros middleware
 const { ErrorHandler } = require("./middleware/errorHandler.middleware.js");
 
+//cookier parser library
+const cookieParser = require("cookie-parser");
+
 const app = express();
 
 //xss Cross-site scripting inplement
@@ -42,6 +45,9 @@ app.use(
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
   })
 );
+
+//cookies parser for
+app.use(cookieParser());
 
 // project middlewares
 app.use(morgan("dev"));
