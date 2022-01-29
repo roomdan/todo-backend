@@ -8,6 +8,28 @@ exports.VerifyContentMiddleware = [
     .withMessage("Error, name could not be empty"),
 ];
 
+exports.VerifyCreateUserDataMiddleware = [
+  body("userName")
+    .notEmpty()
+    .withMessage("User Name cant be empty")
+    .isString()
+    .withMessage("UserName is not an estring"),
+  body("email")
+    .notEmpty()
+    .withMessage("Email cant be empty")
+    .isString()
+    .withMessage("Email is not an valid string")
+    .isEmail()
+    .withMessage("The file email is not a valid email."),
+  body("password")
+    .notEmpty()
+    .withMessage("Password cant be empty.")
+    .isAlphanumeric()
+    .withMessage(
+      "Password is not an alphanumeric sting, please validate data and try again. "
+    ),
+];
+
 exports.VerifyCreateGroupData = [
   body("groupName")
     .isString()

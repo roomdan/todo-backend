@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const {
   VerifyContentMiddleware,
+  VerifyCreateUserDataMiddleware,
 } = require("../middleware/verifyDataType.middleware");
 //controllers
 const {
@@ -18,7 +19,7 @@ const { VerifyHeaderToken } = require("../middleware/verifyToken.middleware");
 //Routes
 const router = Router();
 
-router.post("", CreateUserCtrl);
+router.post("", VerifyCreateUserDataMiddleware, CreateUserCtrl);
 router.post("/client-auth", AutUserCtrl);
 
 router.use(VerifyHeaderToken);

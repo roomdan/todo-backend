@@ -22,6 +22,19 @@ class ManageUsers {
       email: user.email,
     };
 
+    const validateUnicUser = await UserData.findOne({
+      where: { email: user.email },
+    });
+
+    if (validateUnicUser) {
+      return {
+        status:
+          "User email is already registered, please log in or register another user.",
+        userStatus: "Fail register",
+        data: "no data",
+      };
+    }
+
     const db_create = await UserData.create({
       ...user,
       password: encriptPassword,
@@ -30,7 +43,11 @@ class ManageUsers {
     db_create.password = undefined;
     db_create.userName = undefined;
 
-    return db_create;
+    return {
+      status: "Succes create user",
+      userStatus: "register",
+      data: db_create,
+    };
   }
 
   static async Update(upData, id) {

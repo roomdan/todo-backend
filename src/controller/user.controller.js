@@ -3,17 +3,39 @@ const ErrorApp = require("../util/error_handler/error.handler.js");
 
 //express validator
 const { validationResult } = require("express-validator");
-const { Email } = require("../util/nodemailer/email.js");
+
+//Email Send
+const { SendEmail } = require("../util/nodemailer/email.js");
 
 exports.CreateUserCtrl = async (req, resp, next) => {
   try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      resp.status(400).json({
+        Error: "Data user is invalid.",
+        message:
+          "An error ocurred in your data request, any fields have inconsistencies.",
+        ErrorList: errors.array(),
+      });
+    }
+
     const userData = req.body;
     const Create_db = await UserService.Create(userData);
     resp.status(201).json(Create_db);
+
+    //sent confirm email
+    await new SendEmail(
+      userData.name.concat(" ", userData.lastName),
+      userData.email,
+      "User Email Verification"
+    ).SendWelcome({ email: userData.email });
+
+    //
   } catch (error) {
     next(
       new ErrorApp(
-        "User Data Error, please verify data types or view our documentation",
+        "User is already register or data values from this request are invalid, please check our docomentation or try again later.",
         400
       ).Error()
     );
@@ -84,9 +106,6 @@ exports.AutUserCtrl = async (req, resp, next) => {
 
     // ValidateCredentials.token = undefined;
     resp.status(400).json(ValidateCredentials);
-
-    //send alert login email
-    await new Email("daniel", "danielexamexample@gmail.com").sendWelcome();
   } catch (error) {
     next(new ErrorApp(error.message, 400));
   }

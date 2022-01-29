@@ -1,42 +1,59 @@
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const path = require("path");
+const pug = require("pug");
+const { htmlToText } = require("html-to-text");
 
 const configpath = path.join(__dirname, "..", "..", "..", "config.env");
-
 dotenv.config({ path: configpath });
 
-class Email {
-  constructor(name, emails) {
-    this.name = name;
-    this.emails = emails;
+class ConfigEmail {
+  constructor(userName, emailList, subject) {
+    this.name = userName;
+    this.emails = emailList;
+    this.subject = subject;
   }
 
   createTransport() {
     return nodemailer.createTransport({
-      host: "smtp.mailtrap.io",
-      port: "2525",
+      host: process.env.MAIL_HOST,
+      port: process.env.MAIL_PORT,
       auth: {
-        user: String("83e1578ddbde7f"),
-        pass: String("3ba42c00944bea"),
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
       },
     });
   }
 
-  async send(subject) {
+  async send(emailType, options) {
     const transport = await this.createTransport();
+    const emailPath = path.join(
+      __dirname,
+      "..",
+      "../views/emails",
+      `${emailType}.pug`
+    );
+    const html = pug.renderFile(emailPath, options);
 
     await transport.sendMail({
-      from: "danielfcramos7@gmail.com",
-      to: "danielexampexe@gmail.com",
-      subject,
-      html: "hola mundo",
+      from: "Hello@todotasks.com.co",
+      to: this.emails,
+      subject: this.subject,
+      html,
+      text: htmlToText(html),
     });
-  }
-
-  async sendWelcome() {
-    await this.send("new email");
   }
 }
 
-module.exports = { Email };
+class SendEmail extends ConfigEmail {
+  async SendWelcome({ email, userToken }) {
+    const options = {
+      name: this.name,
+      email,
+      validateEmail: `https://validateroute/${userToken}`,
+    };
+    await this.send("welcome", options);
+  }
+}
+
+module.exports = { SendEmail };
