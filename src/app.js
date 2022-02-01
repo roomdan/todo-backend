@@ -12,6 +12,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 const path = require("path");
+const helmet = require("helmet");
 
 // ENV
 const dev_ENV = path.resolve(__dirname, "../", "config.env");
@@ -30,6 +31,9 @@ const { ErrorHandler } = require("./middleware/errorHandler.middleware.js");
 const cookieParser = require("cookie-parser");
 
 const app = express();
+
+//secure helmet headers -view helmet secure documentation
+app.use(helmet());
 
 //xss Cross-site scripting inplement
 app.use(xss());

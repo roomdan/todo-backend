@@ -4,6 +4,9 @@ const path = require("path");
 const pug = require("pug");
 const { htmlToText } = require("html-to-text");
 
+// config credentials nodemailer
+const _config = require("./config/config.js");
+
 const configpath = path.join(__dirname, "..", "..", "..", "config.env");
 dotenv.config({ path: configpath });
 
@@ -15,14 +18,8 @@ class ConfigEmail {
   }
 
   createTransport() {
-    return nodemailer.createTransport({
-      host: process.env.MAIL_HOST,
-      port: process.env.MAIL_PORT,
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
-      },
-    });
+    let config = _config[process.env.NODE_ENV];
+    return nodemailer.createTransport(config);
   }
 
   async send(emailType, options) {
@@ -36,7 +33,7 @@ class ConfigEmail {
     const html = pug.renderFile(emailPath, options);
 
     await transport.sendMail({
-      from: "Hello@todotasks.com.co",
+      from: "danielfcramos7@gmail.com",
       to: this.emails,
       subject: this.subject,
       html,
