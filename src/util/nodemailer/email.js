@@ -18,7 +18,7 @@ class ConfigEmail {
   }
 
   createTransport() {
-    let config = _config[process.env.NODE_ENV];
+    let config = _config[process.env.NODE_ENV || "development"];
     return nodemailer.createTransport(config);
   }
 
