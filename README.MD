@@ -12,7 +12,7 @@ npm install, after of this run npm start for init the integrated server.
 ## How to start in development mode
 
 First follow the before steps and create an postgres database,
-create an config.env file with the name of enviroments variables, pelase view the followin
+create a config.env file with the name of enviroments variables, pelase view the followin
 enviroment file example (copy and paste this in an new .env file with the name config.env):
 
 !! Before to copy, Delete all comments:
